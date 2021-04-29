@@ -32,7 +32,7 @@ class Slime: public Enemy {
 
         int getState();
 		Hit_Box get_Hitbox();
-        void collision_response();
+        virtual void collision_response(char type, int edge, int Obj_index);
         void updatePos();
         void render(SDL_Renderer* renderer);
 

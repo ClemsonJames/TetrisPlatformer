@@ -500,6 +500,24 @@ int Game_Engine::Update_Mechanics() {
 	if(NoBcollision) {
 		player->collision_response('N', 0, 0);
 	}
+
+	Hit_Box objectHitbox1;
+	Hit_Box objectHitbox2;
+	for (int i = 0; i < Objects.size(); i++) {
+		if (Objects[i]->get_check_col()) {
+			for (int j = 0; j < Objects.size(); j++) {
+				if (i != j && Objects[j]->get_check_col()) {
+					objectHitbox1 = Objects[i]->get_Hit_Boxs()[0];
+					objectHitbox2 = Objects[j]->get_Hit_Boxs()[0];
+					if (Collision_check(objectHitbox1, objectHitbox2)) {
+						Objects[i]->collision_response('c', 0, 0);
+					}
+				}
+			}
+		}
+	}
+
+
 	
 	return 0;
 }

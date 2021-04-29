@@ -8,7 +8,7 @@ Hit_Box Slime::get_Hitbox() {
     return Hit_Boxes[0];
 }
 
-void Slime::collision_response() {
+void Slime::collision_response(char type, int edge, int Obj_index) {
     destRect.x -= velX;
     velX *= -1;
     left = (left+1) % 2;
