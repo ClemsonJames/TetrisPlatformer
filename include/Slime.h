@@ -11,13 +11,13 @@
 
 class Slime: public Enemy {
     protected:
-        const double SPEED = 2.0;
+        const double SPEED = 1.0;
         int counter = 0;
 
 	public:
 
 		Slime(int x, int y, int w, int h, std::string name, Image_Handler* image):
-            Enemy(x, y, w, h, 3, name, image) {
+            Enemy(x, y, w-2, h-2, 3, name, image) {
                 velX = SPEED;
 
                 Hit_Box Temp; 
@@ -26,6 +26,7 @@ class Slime: public Enemy {
                 Temp.TE = destRect.y;
                 Temp.BE = destRect.y + destRect.h;
                 Hit_Boxes.push_back(Temp);
+                id = 1;
             }
 
 		~Slime() {}
@@ -33,8 +34,8 @@ class Slime: public Enemy {
         int getState();
 		Hit_Box get_Hitbox();
         virtual void collision_response(char type, int edge, int Obj_index);
-        void updatePos();
-        void render(SDL_Renderer* renderer);
+        virtual void updatePos();
+        virtual void render(SDL_Renderer* renderer);
 
 		
 };

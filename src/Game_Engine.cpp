@@ -22,7 +22,8 @@ Game_Engine::Game_Engine() {
         (SDL_CreateRenderer(game_window.get(), -1, SDL_RENDERER_PRESENTVSYNC), SDL_DestroyRenderer);
 
 	//Init Image Handler
-	std::vector <std::string> Image_names = {"./asset/player.png", "./asset/tiles.png", "./asset/slime.png", "./asset/button.png"};
+	std::vector <std::string> Image_names = {"./asset/player.png", "./asset/tiles.png", "./asset/slime.png", "./asset/Level_0.png", 
+	"./asset/Level_1.png", "./asset/Quit.png", "./asset/Resume.png", "./asset/Start.png", "./asset/Main.png"};
 
 	Images = Image_Handler(Image_names, game_renderer.get());
 	menu = Menu(game_window.get(), &Images);
@@ -95,10 +96,18 @@ int Game_Engine::Level_init(int level) {
 	*/
 
 	//Read level editor sheet layout
+	int i = 0;
+	int j = 0;
 	Objects.clear();
-	Block_Holders.clear();
 	if (Level_file.is_open()) {
 		while (!Level_file.eof()) {
+			/*
+			Grid[i].push_back(new Game_Entity(x, y, tile_size, tile_size));
+			j++;
+			if(j == 20){
+				i++;
+				j = 0;
+			}*/
 			Level_file >> symbol;
 			switch (symbol) {
 				case '0':
@@ -110,180 +119,182 @@ int Game_Engine::Level_init(int level) {
 				case '2':
 					Objects.push_back(new Tile(2, x, y, tile_size, nCols, false, &Images));
 					break;
+				case '3':
+					Objects.push_back(new Tile(0, x, y, tile_size, nCols, false, &Images));
+					break;
 				case '8':
 					player = new Player(x, y, tile_size, tile_size, &Images);
-					// Objects.insert(Objects.begin(), Player(x, y, tile_size, tile_size, &Images));
 					break;
 				case '9':
 					Objects.push_back(new Slime(x, y, tile_size, tile_size, "./asset/slime.png", &Images));
 					break;
 				case 'I':
-					Block_Holders.push_back(new Block_Holder(0, 3, x, y, tile_size, nCols, true, &Images, true, 0));
+					Objects.push_back(new Block_Holder(0, 3, x, y, tile_size, nCols, true, &Images, true, 0));
 					break;
 				case 'i':
-					Block_Holders.push_back(new Block_Holder(0, 10, x, y, tile_size, nCols, true, &Images, false, 0));
+					Objects.push_back(new Block_Holder(0, 10, x, y, tile_size, nCols, true, &Images, false, 0));
 					break;
 				case 'N':
-					Block_Holders.push_back(new Block_Holder(0, 3, x, y, tile_size, nCols, true, &Images, true, 1));
+					Objects.push_back(new Block_Holder(0, 3, x, y, tile_size, nCols, true, &Images, true, 1));
 					break;
 				case 'n':
-					Block_Holders.push_back(new Block_Holder(0, 10, x, y, tile_size, nCols, true, &Images, false, 1));
+					Objects.push_back(new Block_Holder(0, 10, x, y, tile_size, nCols, true, &Images, false, 1));
 					break;
 				case 'M':
-					Block_Holders.push_back(new Block_Holder(0, 3, x, y, tile_size, nCols, true, &Images, true, 2));
+					Objects.push_back(new Block_Holder(0, 3, x, y, tile_size, nCols, true, &Images, true, 2));
 					break;
 				case 'm':
-					Block_Holders.push_back(new Block_Holder(0, 10, x, y, tile_size, nCols, true, &Images, false, 2));
+					Objects.push_back(new Block_Holder(0, 10, x, y, tile_size, nCols, true, &Images, false, 2));
 					break;
 				case '<':
-					Block_Holders.push_back(new Block_Holder(0, 3, x, y, tile_size, nCols, true, &Images, true, 3));
+					Objects.push_back(new Block_Holder(0, 3, x, y, tile_size, nCols, true, &Images, true, 3));
 					break;
 				case ',':
-					Block_Holders.push_back(new Block_Holder(0, 10, x, y, tile_size, nCols, true, &Images, false, 3));
+					Objects.push_back(new Block_Holder(0, 10, x, y, tile_size, nCols, true, &Images, false, 3));
 					break;
 				case 'F':
-					Block_Holders.push_back(new Block_Holder(2, 4, x, y, tile_size, nCols, true, &Images, true, 0));
+					Objects.push_back(new Block_Holder(2, 4, x, y, tile_size, nCols, true, &Images, true, 0));
 					break;
 				case 'f':
-					Block_Holders.push_back(new Block_Holder(2, 11, x, y, tile_size, nCols, true, &Images, false, 0));
+					Objects.push_back(new Block_Holder(2, 11, x, y, tile_size, nCols, true, &Images, false, 0));
 					break;
 				case 'G':
-					Block_Holders.push_back(new Block_Holder(2, 4, x, y, tile_size, nCols, true, &Images, true, 1));
+					Objects.push_back(new Block_Holder(2, 4, x, y, tile_size, nCols, true, &Images, true, 1));
 					break;
 				case 'g':
-					Block_Holders.push_back(new Block_Holder(2, 11, x, y, tile_size, nCols, true, &Images, false, 1));
+					Objects.push_back(new Block_Holder(2, 11, x, y, tile_size, nCols, true, &Images, false, 1));
 					break;
 				case 'H':
-					Block_Holders.push_back(new Block_Holder(2, 4, x, y, tile_size, nCols, true, &Images, true, 2));
+					Objects.push_back(new Block_Holder(2, 4, x, y, tile_size, nCols, true, &Images, true, 2));
 					break;
 				case 'h':
-					Block_Holders.push_back(new Block_Holder(2, 11, x, y, tile_size, nCols, true, &Images, false, 2));
+					Objects.push_back(new Block_Holder(2, 11, x, y, tile_size, nCols, true, &Images, false, 2));
 					break;
 				case 'J':
-					Block_Holders.push_back(new Block_Holder(2, 4, x, y, tile_size, nCols, true, &Images, true, 3));
+					Objects.push_back(new Block_Holder(2, 4, x, y, tile_size, nCols, true, &Images, true, 3));
 					break;
 				case 'j':
-					Block_Holders.push_back(new Block_Holder(2, 11, x, y, tile_size, nCols, true, &Images, false, 3));
+					Objects.push_back(new Block_Holder(2, 11, x, y, tile_size, nCols, true, &Images, false, 3));
 					break;
 				case 'K':
-					Block_Holders.push_back(new Block_Holder(1, 5, x, y, tile_size, nCols, true, &Images, true, 0));
+					Objects.push_back(new Block_Holder(1, 5, x, y, tile_size, nCols, true, &Images, true, 0));
 					break;
 				case 'k':
-					Block_Holders.push_back(new Block_Holder(1, 12, x, y, tile_size, nCols, true, &Images, false, 0));
+					Objects.push_back(new Block_Holder(1, 12, x, y, tile_size, nCols, true, &Images, false, 0));
 					break;
 				case 'L':
-					Block_Holders.push_back(new Block_Holder(1, 5, x, y, tile_size, nCols, true, &Images, true, 1));
+					Objects.push_back(new Block_Holder(1, 5, x, y, tile_size, nCols, true, &Images, true, 1));
 					break;
 				case 'l':
-					Block_Holders.push_back(new Block_Holder(1, 12, x, y, tile_size, nCols, true, &Images, false, 1));
+					Objects.push_back(new Block_Holder(1, 12, x, y, tile_size, nCols, true, &Images, false, 1));
 					break;
 				case ':':
-					Block_Holders.push_back(new Block_Holder(1, 5, x, y, tile_size, nCols, true, &Images, true, 2));
+					Objects.push_back(new Block_Holder(1, 5, x, y, tile_size, nCols, true, &Images, true, 2));
 					break;
 				case ';':
-					Block_Holders.push_back(new Block_Holder(1, 12, x, y, tile_size, nCols, true, &Images, false, 2));
+					Objects.push_back(new Block_Holder(1, 12, x, y, tile_size, nCols, true, &Images, false, 2));
 					break;
 				case '?':
-					Block_Holders.push_back(new Block_Holder(1, 5, x, y, tile_size, nCols, true, &Images, true, 3));
+					Objects.push_back(new Block_Holder(1, 5, x, y, tile_size, nCols, true, &Images, true, 3));
 					break;
 				case '/':
-					Block_Holders.push_back(new Block_Holder(1, 12, x, y, tile_size, nCols, true, &Images, false, 3));
+					Objects.push_back(new Block_Holder(1, 12, x, y, tile_size, nCols, true, &Images, false, 3));
 					break;
 				case 'O':
-					Block_Holders.push_back(new Block_Holder(3, 6, x, y, tile_size, nCols, true, &Images, true, 0));
+					Objects.push_back(new Block_Holder(3, 6, x, y, tile_size, nCols, true, &Images, true, 0));
 					break;
 				case 'o':
-					Block_Holders.push_back(new Block_Holder(3, 13, x, y, tile_size, nCols, true, &Images, false, 0));
+					Objects.push_back(new Block_Holder(3, 13, x, y, tile_size, nCols, true, &Images, false, 0));
 					break;
 				case 'P':
-					Block_Holders.push_back(new Block_Holder(3, 6, x, y, tile_size, nCols, true, &Images, true, 1));
+					Objects.push_back(new Block_Holder(3, 6, x, y, tile_size, nCols, true, &Images, true, 1));
 					break;
 				case 'p':
-					Block_Holders.push_back(new Block_Holder(3, 13, x, y, tile_size, nCols, true, &Images, false, 1));
+					Objects.push_back(new Block_Holder(3, 13, x, y, tile_size, nCols, true, &Images, false, 1));
 					break;
 				case '{':
-					Block_Holders.push_back(new Block_Holder(3, 6, x, y, tile_size, nCols, true, &Images, true, 2));
+					Objects.push_back(new Block_Holder(3, 6, x, y, tile_size, nCols, true, &Images, true, 2));
 					break;
 				case '[':
-					Block_Holders.push_back(new Block_Holder(3, 13, x, y, tile_size, nCols, true, &Images, false, 2));
+					Objects.push_back(new Block_Holder(3, 13, x, y, tile_size, nCols, true, &Images, false, 2));
 					break;
 				case '}':
-					Block_Holders.push_back(new Block_Holder(3, 6, x, y, tile_size, nCols, true, &Images, true, 3));
+					Objects.push_back(new Block_Holder(3, 6, x, y, tile_size, nCols, true, &Images, true, 3));
 					break;
 				case ']':
-					Block_Holders.push_back(new Block_Holder(3, 13, x, y, tile_size, nCols, true, &Images, false, 3));
+					Objects.push_back(new Block_Holder(3, 13, x, y, tile_size, nCols, true, &Images, false, 3));
 					break;
 				case 'S':
-					Block_Holders.push_back(new Block_Holder(5, 7, x, y, tile_size, nCols, true, &Images, true, 0));
+					Objects.push_back(new Block_Holder(5, 7, x, y, tile_size, nCols, true, &Images, true, 0));
 					break;
 				case 's':
-					Block_Holders.push_back(new Block_Holder(5, 14, x, y, tile_size, nCols, true, &Images, false, 0));
+					Objects.push_back(new Block_Holder(5, 14, x, y, tile_size, nCols, true, &Images, false, 0));
 					break;
 				case 'A':
-					Block_Holders.push_back(new Block_Holder(5, 7, x, y, tile_size, nCols, true, &Images, true, 1));
+					Objects.push_back(new Block_Holder(5, 7, x, y, tile_size, nCols, true, &Images, true, 1));
 					break;
 				case 'a':
-					Block_Holders.push_back(new Block_Holder(5, 14, x, y, tile_size, nCols, true, &Images, false, 1));
+					Objects.push_back(new Block_Holder(5, 14, x, y, tile_size, nCols, true, &Images, false, 1));
 					break;
 				case 'D':
-					Block_Holders.push_back(new Block_Holder(5, 7, x, y, tile_size, nCols, true, &Images, true, 2));
+					Objects.push_back(new Block_Holder(5, 7, x, y, tile_size, nCols, true, &Images, true, 2));
 					break;
 				case 'd':
-					Block_Holders.push_back(new Block_Holder(5, 14, x, y, tile_size, nCols, true, &Images, false, 2));
+					Objects.push_back(new Block_Holder(5, 14, x, y, tile_size, nCols, true, &Images, false, 2));
 					break;
 				case 'Q':
-					Block_Holders.push_back(new Block_Holder(5, 7, x, y, tile_size, nCols, true, &Images, true, 3));
+					Objects.push_back(new Block_Holder(5, 7, x, y, tile_size, nCols, true, &Images, true, 3));
 					break;
 				case 'q':
-					Block_Holders.push_back(new Block_Holder(5, 14, x, y, tile_size, nCols, true, &Images, false, 3));
+					Objects.push_back(new Block_Holder(5, 14, x, y, tile_size, nCols, true, &Images, false, 3));
 					break;
 				case 'T':
-					Block_Holders.push_back(new Block_Holder(6, 8, x, y, tile_size, nCols, true, &Images, true, 0));
+					Objects.push_back(new Block_Holder(6, 8, x, y, tile_size, nCols, true, &Images, true, 0));
 					break;
 				case 't':
-					Block_Holders.push_back(new Block_Holder(6, 15, x, y, tile_size, nCols, true, &Images, false, 0));
+					Objects.push_back(new Block_Holder(6, 15, x, y, tile_size, nCols, true, &Images, false, 0));
 					break;
 				case 'R':
-					Block_Holders.push_back(new Block_Holder(6, 8, x, y, tile_size, nCols, true, &Images, true, 1));
+					Objects.push_back(new Block_Holder(6, 8, x, y, tile_size, nCols, true, &Images, true, 1));
 					break;
 				case 'r':
-					Block_Holders.push_back(new Block_Holder(6, 15, x, y, tile_size, nCols, true, &Images, false, 1));
+					Objects.push_back(new Block_Holder(6, 15, x, y, tile_size, nCols, true, &Images, false, 1));
 					break;
 				case 'E':
-					Block_Holders.push_back(new Block_Holder(6, 8, x, y, tile_size, nCols, true, &Images, true, 2));
+					Objects.push_back(new Block_Holder(6, 8, x, y, tile_size, nCols, true, &Images, true, 2));
 					break;
 				case 'e':
-					Block_Holders.push_back(new Block_Holder(6, 15, x, y, tile_size, nCols, true, &Images, false, 2));
+					Objects.push_back(new Block_Holder(6, 15, x, y, tile_size, nCols, true, &Images, false, 2));
 					break;
 				case 'W':
-					Block_Holders.push_back(new Block_Holder(6, 8, x, y, tile_size, nCols, true, &Images, true, 3));
+					Objects.push_back(new Block_Holder(6, 8, x, y, tile_size, nCols, true, &Images, true, 3));
 					break;
 				case 'w':
-					Block_Holders.push_back(new Block_Holder(6, 15, x, y, tile_size, nCols, true, &Images, false, 3));
+					Objects.push_back(new Block_Holder(6, 15, x, y, tile_size, nCols, true, &Images, false, 3));
 					break;
 				case 'X':
-					Block_Holders.push_back(new Block_Holder(4, 9, x, y, tile_size, nCols, true, &Images, true, 0));
+					Objects.push_back(new Block_Holder(4, 9, x, y, tile_size, nCols, true, &Images, true, 0));
 					break;
 				case 'x':
-					Block_Holders.push_back(new Block_Holder(4, 16, x, y, tile_size, nCols, true, &Images, false, 0));
+					Objects.push_back(new Block_Holder(4, 16, x, y, tile_size, nCols, true, &Images, false, 0));
 					break;
 				case 'C':
-					Block_Holders.push_back(new Block_Holder(4, 9, x, y, tile_size, nCols, true, &Images, true, 1));
+					Objects.push_back(new Block_Holder(4, 9, x, y, tile_size, nCols, true, &Images, true, 1));
 					break;
 				case 'c':
-					Block_Holders.push_back(new Block_Holder(4, 16, x, y, tile_size, nCols, true, &Images, false, 1));
+					Objects.push_back(new Block_Holder(4, 16, x, y, tile_size, nCols, true, &Images, false, 1));
 					break;
 				case 'V':
-					Block_Holders.push_back(new Block_Holder(4, 9, x, y, tile_size, nCols, true, &Images, true, 2));
+					Objects.push_back(new Block_Holder(4, 9, x, y, tile_size, nCols, true, &Images, true, 2));
 					break;
 				case 'v':
-					Block_Holders.push_back(new Block_Holder(4, 16, x, y, tile_size, nCols, true, &Images, false, 2));
+					Objects.push_back(new Block_Holder(4, 16, x, y, tile_size, nCols, true, &Images, false, 2));
 					break;
 				case 'B':
-					Block_Holders.push_back(new Block_Holder(4, 9, x, y, tile_size, nCols, true, &Images, true, 3));
+					Objects.push_back(new Block_Holder(4, 9, x, y, tile_size, nCols, true, &Images, true, 3));
 					break;
 				case 'b':
-					Block_Holders.push_back(new Block_Holder(4, 16, x, y, tile_size, nCols, true, &Images, false, 3));
+					Objects.push_back(new Block_Holder(4, 16, x, y, tile_size, nCols, true, &Images, false, 3));
 					break;
 
 				default:
@@ -355,11 +366,6 @@ int Game_Engine::Render() {
 		Objects[i]->render(game_renderer.get());
 	}
 
-	for (int i = 0; i < Block_Holders.size(); i++) {
-		Block_Holders[i]->render(game_renderer.get());
-	}
-
-
 	player->render(game_renderer.get());
 	/*if (Hive.get_is_rendered() || !Hive.get_Done()) {
 		Hive.Pe_render(game_renderer);
@@ -395,10 +401,14 @@ int Game_Engine::Handle_Events() {
 	if (input.type == SDL_MOUSEBUTTONDOWN) {
 		int x, y;
 		SDL_GetMouseState(&x, &y);
-		for (int i = 0; i < Block_Holders.size(); i++) {
-			if (Block_Holders[i]->inside(x, y) && Block_Holders[i]->active) {
-				Block_Holders[i]->Rotate(true);
+		for (int i = 0; i < Objects.size(); i++) {
+			if (Objects[i]->inside(x, y) && Objects[i]->active && Objects[i]->getID() == 2) {
+				Objects[i]->Rotate(true);
 			}
+			/*
+			else{
+				Objects[i]->no_action();
+			}*/
 		}
 	}
 
@@ -425,66 +435,55 @@ int Game_Engine::Update_Mechanics() {
 	// Get Player State and call the coresponding Player Position update function
 	Hit_Box playerHitbox;
 	Hit_Box objectHitbox;
-	std::vector<Hit_Box> playerHitboxes;
+	Hit_Box kickBox;
 	std::vector<Hit_Box> BlockHolderHitboxes;
 	for (int i = 0; i < Objects.size(); i++) {
 		Objects[i]->updatePos();
-	}	
+	}
 	player->updatePos();
-	switch (player->getState())
-	{
-		case player->KICK:
-			playerHitboxes = player->get_Hit_Boxs();
-			break;
-		default:
-			playerHitbox = player->get_Hitbox();
-			break;
-	}
-	bool NoBcollision = true;
-	for (int i = 0; i < Objects.size(); i++) {
-		if (Objects[i]->get_check_col()) {
-			objectHitbox = Objects[i]->get_Hit_Boxs()[0];
-			if (Collision_check(playerHitbox, objectHitbox)) {
-					if (playerHitbox.BE - objectHitbox.TE <= 7) {
-						NoBcollision = false;
-						player->collision_response('B', objectHitbox.TE, i);
-					}
-					else if (playerHitbox.RE - objectHitbox.LE <= 5) {
-						NoBcollision = false;
-						player->collision_response('R', objectHitbox.LE, i);
-					}
-					else if (objectHitbox.RE - playerHitbox.LE <= 5) {
-						NoBcollision = false;
-						player->collision_response('L', objectHitbox.RE, i);
-					}
-					else if (objectHitbox.BE - playerHitbox.TE <= 6) {
-						NoBcollision = false;
-						player->collision_response('T', objectHitbox.BE, i);
-					}
-					else {
-						player->collision_response('N', 0, i );
-					}
-			}
-		}
-	}
 
-	for (int i = 0; i < Block_Holders.size(); i++) {
-		if (Block_Holders[i]->get_check_col()) {
-			BlockHolderHitboxes = Block_Holders[i]->get_Hit_Boxs();
-			for (int j = 0; j < BlockHolderHitboxes.size(); j++) {
-				objectHitbox = BlockHolderHitboxes[j];
-				if (Collision_check(playerHitbox, objectHitbox)) {
+	// player collision
+
+	playerHitbox = player->get_Hitbox();
+
+	bool NoBcollision = true;
+
+	bool doKick = player->getKick();
+
+	for (int i = 0; i < Objects.size(); i++) {
+			if (Objects[i]->get_check_col())
+			{
+				// not a block holder
+				if (Objects[i]->getID() != 2)
+				{
+					objectHitbox = Objects[i]->get_Hit_Boxs()[0];
+					if (Collision_check(playerHitbox, objectHitbox))
+					{
 						if (playerHitbox.BE - objectHitbox.TE <= 7) {
 							NoBcollision = false;
+							if (Objects[i]->getID() == 1) {
+								Objects.erase(Objects.begin() + i);
+							}
 							player->collision_response('B', objectHitbox.TE, i);
+
 						}
 						else if (playerHitbox.RE - objectHitbox.LE <= 5) {
 							NoBcollision = false;
 							player->collision_response('R', objectHitbox.LE, i);
+							if (Objects[i]->getID() == 1) {
+								if (menu.menuLoop(3, game_renderer.get()) == 9999) {
+									Run_game = false;
+								}
+							}
 						}
 						else if (objectHitbox.RE - playerHitbox.LE <= 5) {
 							NoBcollision = false;
 							player->collision_response('L', objectHitbox.RE, i);
+							if (Objects[i]->getID() == 1) {
+								if (menu.menuLoop(3, game_renderer.get()) == 9999) {
+									Run_game = false;
+								}
+							}
 						}
 						else if (objectHitbox.BE - playerHitbox.TE <= 6) {
 							NoBcollision = false;
@@ -495,30 +494,127 @@ int Game_Engine::Update_Mechanics() {
 						}
 				}
 			}
+			else {
+				// if object is a block holder
+				BlockHolderHitboxes = Objects[i]->get_Hit_Boxs();
+				for (int j = 0; j < BlockHolderHitboxes.size(); j++) {
+					objectHitbox = BlockHolderHitboxes[j];
+					if(doKick) {
+						kickBox = player->Kick();
+						if(Collision_check(kickBox, objectHitbox)) {
+							if(player->getLeft() == 1){
+								int dist = tile_size * -1;
+								Objects[i]->Move(dist, 0);
+							}
+							else{
+								Objects[i]->Move(tile_size, 0);
+							}
+						}
+						/*else if (Objects[i]->get_action() != 2){
+							Objects[i]->no_action();
+						}*/
+					}
+					if (Collision_check(playerHitbox, objectHitbox)) {
+							if (playerHitbox.BE - objectHitbox.TE <= 7) {
+								NoBcollision = false;
+								if (Objects[i]->getID() == 2 && player->getState() == 4) {
+									Objects[i]->Move(0, tile_size);
+								}
+								player->collision_response('B', objectHitbox.TE, i);
+							}
+							else if (playerHitbox.RE - objectHitbox.LE <= 5) {
+								NoBcollision = false;
+								player->collision_response('R', objectHitbox.LE, i);
+							}
+							else if (objectHitbox.RE - playerHitbox.LE <= 5) {
+								NoBcollision = false;
+								player->collision_response('L', objectHitbox.RE, i);
+							}
+							else if (objectHitbox.BE - playerHitbox.TE <= 6) {
+								NoBcollision = false;
+								player->collision_response('T', objectHitbox.BE, i);
+							}
+							else {
+								player->collision_response('N', 0, i );
+							}
+					}
+				}
+			}
 		}
 	}
 	if(NoBcollision) {
 		player->collision_response('N', 0, 0);
 	}
 
+	//other object collision
+	std::vector<Hit_Box> BlockHolderHitboxes1;
+	std::vector<Hit_Box> BlockHolderHitboxes2;
 	Hit_Box objectHitbox1;
 	Hit_Box objectHitbox2;
 	for (int i = 0; i < Objects.size(); i++) {
 		if (Objects[i]->get_check_col()) {
 			for (int j = 0; j < Objects.size(); j++) {
 				if (i != j && Objects[j]->get_check_col()) {
-					objectHitbox1 = Objects[i]->get_Hit_Boxs()[0];
-					objectHitbox2 = Objects[j]->get_Hit_Boxs()[0];
-					if (Collision_check(objectHitbox1, objectHitbox2)) {
-						Objects[i]->collision_response('c', 0, 0);
+					// when first and second object are block holder
+					if (Objects[i]->getID() == 2 && Objects[j]->getID() == 2) {
+						BlockHolderHitboxes1 = Objects[i]->get_Hit_Boxs();
+						BlockHolderHitboxes2 = Objects[j]->get_Hit_Boxs();
+						for (int k = 0; k < BlockHolderHitboxes1.size(); k++) {
+							objectHitbox1 = BlockHolderHitboxes1[k];
+							for (int l = 0; l < BlockHolderHitboxes2.size(); l++) {
+								objectHitbox2 = BlockHolderHitboxes2[l];
+								if (Collision_check(objectHitbox1, objectHitbox2)) {
+									Objects[i]->collision_response('c', objectHitbox2.RE, 0);
+								}
+							}
+						}
+					}
+
+					// when first and second are not block holder
+					else if (Objects[i]->getID() != 2 && Objects[j]->getID() != 2) {
+						objectHitbox1 = Objects[i]->get_Hit_Boxs()[0];
+						objectHitbox2 = Objects[j]->get_Hit_Boxs()[0];
+						if (Collision_check(objectHitbox1, objectHitbox2)) {
+							Objects[i]->collision_response('c', objectHitbox2.RE, 0);
+						}
+					}
+					// when first is block holder, second not block holder
+					else if (Objects[i]->getID() == 2 && Objects[j]->getID() != 2) {
+						BlockHolderHitboxes1 = Objects[i]->get_Hit_Boxs();
+						objectHitbox2 = Objects[j]->get_Hit_Boxs()[0];
+						for (int k = 0; k < BlockHolderHitboxes.size(); k++) {
+							objectHitbox1 = BlockHolderHitboxes1[k];
+							if (Collision_check(objectHitbox1, objectHitbox2)) {
+								Objects[i]->collision_response('c', objectHitbox2.RE, 0);
+							}
+						}
+					}
+					// when first is not block holder, second is block holder
+					else if (Objects[i]->getID() != 2 && Objects[j]->getID() == 2) {
+						objectHitbox1 = Objects[i]->get_Hit_Boxs()[0];
+						BlockHolderHitboxes2 = Objects[j]->get_Hit_Boxs();
+						for (int k = 0; k < BlockHolderHitboxes2.size(); k++) {
+							objectHitbox2 = BlockHolderHitboxes2[k];
+							if (Collision_check(objectHitbox1, objectHitbox2)) {
+								Objects[i]->collision_response('c', objectHitbox2.RE, 0);
+							}
+						}
 					}
 				}
 			}
 		}
 	}
 
+	for(int i = 0; i < 20; i++){
+		rowIsFull(i);
+	}
 
-	
+	if (player->get_Hitbox().BE > 732) {
+		if (menu.menuLoop(4, game_renderer.get()) == 9999) {
+			Run_game = false;
+		}
+	}
+
 	return 0;
 }
 
@@ -527,5 +623,52 @@ SDL_Window* Game_Engine::getWindow() {
 }
 SDL_Renderer* Game_Engine::getRenderer() {
 	return game_renderer.get();
+}
+
+void Game_Engine::scanMap() {
+	/*vector<SDL_Rect> rects;
+	SDL_Rect rect;
+	for (int i = 0; i < Objects.size(); i++) {
+		if (Objects[i]->getID() == 2) {
+			rects = Objects[i]->getRect();
+			for (int j = 0; j < rects.size(); j++) {
+				
+			}
+				x 160
+			y 64
+		}
+	}*/
+}
+
+void Game_Engine::rowIsFull(int r){
+	
+	int yLoc = (32*r) + 80;
+	int xLoc = 176;
+	bool activity = false;
+
+	for(int i = 0; i < Objects.size(); i++){
+		if(Objects[i]->getID() == 2){
+			if(Objects[i]->inside(xLoc, yLoc)){
+				xLoc+=32;
+				if (Objects[i]->active) {
+					activity = true;
+				}
+				i = 0;
+			}
+		}
+	}
+
+	if(xLoc >= 800 && activity){
+
+		for(int j = xLoc; j > 160; j -= 32){
+			for(int i = 0; i < Objects.size(); i++){
+				if(Objects[i]->getID() == 2){
+					if(Objects[i]->inside(j, yLoc)){
+						Objects.erase(Objects.begin()+i);
+					}
+				}
+			}
+		}
+	}
 }
 

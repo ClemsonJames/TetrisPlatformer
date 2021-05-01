@@ -16,3 +16,7 @@ std::vector<Hit_Box> Game_Entity::get_Hit_Boxs(){
 void Game_Entity::render(SDL_Renderer* gameRenderer){
 	sprite->render(gameRenderer, destRect, false);
 }
+
+int Game_Entity::getID() {
+	return id;
+}

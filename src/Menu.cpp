@@ -4,8 +4,8 @@ int Menu::menuLoop(int type, SDL_Renderer* renderer) {
     menuRunning = true;
     menuType = type;
     while (menuRunning) {
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-
         // handles mouse clicking on menu
         eventHandler();
         menuSetup(renderer);
@@ -67,6 +67,36 @@ void Menu::eventHandler() {
                         }
                     }
                     break;
+                case 3:
+                    for (int i = 0; i < deathButtons.size(); i++) {
+                        if (deathButtons[i].inside(x, y)) {
+                            if (deathButtons[i].getID() == 6) {
+                                res = 9999; // stop the game loop and go back to main menu
+                            }
+                            else if (deathButtons[i].getID() == 7) {
+                                TTF_Quit();
+                                SDL_Quit(); 
+                                exit(0); 
+                            }
+                            menuRunning = false;
+                        }
+                    }
+                    break;
+                case 4:
+                    for (int i = 0; i < winButtons.size(); i++) {
+                        if (winButtons[i].inside(x, y)) {
+                            if (winButtons[i].getID() == 8) {
+                                res = 9999; // stop the game loop and go back to main menu
+                            }
+                            else if (winButtons[i].getID() == 9) {
+                                TTF_Quit();
+                                SDL_Quit(); 
+                                exit(0); 
+                            }
+                            menuRunning = false;
+                        }
+                    }
+                    break;
             }
         }
     }
@@ -91,6 +121,18 @@ void Menu::menuSetup(SDL_Renderer* renderer) {
             renderText(windowWidth/2, 50, "Pause", renderer);
             for (int i = 0; i < pauseButtons.size(); i++) {
 		        pauseButtons[i].render(renderer);
+	        }
+            break;
+        case 3:
+            renderText(windowWidth/2, 50, "Game Over", renderer);
+            for (int i = 0; i < deathButtons.size(); i++) {
+		        deathButtons[i].render(renderer);
+	        }
+            break;
+        case 4:
+            renderText(windowWidth/2, 50, "Victory", renderer);
+            for (int i = 0; i < winButtons.size(); i++) {
+		        winButtons[i].render(renderer);
 	        }
             break;
     }

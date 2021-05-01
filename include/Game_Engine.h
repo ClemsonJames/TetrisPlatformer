@@ -53,6 +53,7 @@ private:
 	int Camera_move_dist = 0;
 	int level_height = 0, level_width, tile_size, tile_x, tile_y, tile_type;
 	bool col_check;
+	//std::vector<std::vector<int>> Grid(20, std::vector<int>(20, 0));
 
 	//Game Engin Functions
 	int Render();
@@ -60,10 +61,12 @@ private:
 	int Update_Mechanics();
 	int Level_init(int level);
 	int Quit();
+	void scanMap();
 
 public:
 	Game_Engine();
 	int Game_loop();
+	void rowIsFull(int r);
 	SDL_Window* getWindow();
 	SDL_Renderer* getRenderer();
 };

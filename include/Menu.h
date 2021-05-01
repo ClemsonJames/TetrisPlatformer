@@ -22,6 +22,8 @@ private:
     std::vector<Button> startButtons;
     std::vector<Button> levelButtons;
     std::vector<Button> pauseButtons;
+    std::vector<Button> deathButtons;
+    std::vector<Button> winButtons;
 
 public:
     Menu(){}
@@ -31,14 +33,20 @@ public:
         menuRunning = true;
 
         // start menu buttons
-        startButtons.push_back(Button((windowWidth-256)/2, windowHeight/2-96, 256, 96, 0, "./asset/button.png", image)); //start
-        startButtons.push_back(Button((windowWidth-256)/2, windowHeight/2+96, 256, 96, 1, "./asset/button.png", image)); //quit
+        startButtons.push_back(Button((windowWidth-256)/2, windowHeight/2-96, 256, 96, 0, "./asset/Start.png", image)); //start
+        startButtons.push_back(Button((windowWidth-256)/2, windowHeight/2+96, 256, 96, 1, "./asset/Quit.png", image)); //quit
         // level menu buttons
-        levelButtons.push_back(Button(100, 200, 96, 96, 2, "./asset/button.png", image)); // 0
-        levelButtons.push_back(Button(250, 200, 96, 96, 3, "./asset/button.png", image)); // 1
+        levelButtons.push_back(Button(100, 200, 96, 96, 2, "./asset/Level_0.png", image)); // 0
+        levelButtons.push_back(Button(250, 200, 96, 96, 3, "./asset/Level_1.png", image)); // 1
         // pause menu buttons
-        pauseButtons.push_back(Button((windowWidth-256)/2, windowHeight/2-96, 256, 96, 4, "./asset/button.png", image)); // resume
-        pauseButtons.push_back(Button((windowWidth-256)/2, windowHeight/2+96, 256, 96, 5, "./asset/button.png", image)); // main
+        pauseButtons.push_back(Button((windowWidth-256)/2, windowHeight/2-96, 256, 96, 4, "./asset/Resume.png", image)); // resume
+        pauseButtons.push_back(Button((windowWidth-256)/2, windowHeight/2+96, 256, 96, 5, "./asset/Main.png", image)); // main
+        // death menu buttons
+        deathButtons.push_back(Button((windowWidth-256)/2, windowHeight/2-96, 256, 96, 6, "./asset/Main.png", image)); // resume
+        deathButtons.push_back(Button((windowWidth-256)/2, windowHeight/2+96, 256, 96, 7, "./asset/Quit.png", image)); // main
+        // start menu 
+        winButtons.push_back(Button((windowWidth-256)/2, windowHeight/2-96, 256, 96, 8, "./asset/Main.png", image));
+        winButtons.push_back(Button((windowWidth-256)/2, windowHeight/2+96, 256, 96, 9, "./asset/Quit.png", image));
     }
 
     ~Menu() {}

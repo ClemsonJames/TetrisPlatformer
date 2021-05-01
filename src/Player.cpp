@@ -26,6 +26,16 @@ void Player::controller(SDL_Event& input){
 			break;
 		case SDLK_LSHIFT:
 			Magic = true;
+			break;
+
+		case SDLK_s:
+			if (state == JUMP) {
+				groundPound();
+			}
+			break;
+		case SDLK_w:
+			kick = true;
+			break;
 		}
 	}
 	if (input.type == SDL_KEYUP) {
@@ -60,6 +70,9 @@ void Player::updatePos() {
 			break;
 		case JUMP:
 			jump();
+			break;
+		case SMASH:
+			groundPound();
 			break;
 
 		case RUN:
@@ -102,14 +115,6 @@ void Player::jump() {
 	Hit_Boxes[0].BE = destRect.y + destRect.h;
 	Hit_Boxes[0].LE = destRect.x + 6;
 	Hit_Boxes[0].RE = destRect.x + destRect.w - 6;
-	Hit_Boxes[1].BE = Hit_Boxes[0].BE - KickH;
-	Hit_Boxes[1].TE = Hit_Boxes[1].BE - KickH;
-	Hit_Boxes[1].LE = Hit_Boxes[0].LE - KickL;
-	Hit_Boxes[1].RE = Hit_Boxes[0].LE;
-	Hit_Boxes[2].LE = Hit_Boxes[0].RE;
-	Hit_Boxes[2].RE = Hit_Boxes[1].RE + KickL;
-	Hit_Boxes[2].BE = Hit_Boxes[0].BE - KickH;
-	Hit_Boxes[2].TE = Hit_Boxes[2].BE - KickH;
 }
 
 void Player::stop_jump() {
@@ -129,6 +134,48 @@ void Player::stop_jump() {
 	Jump_Start = 0;
 }
 
+void Player::groundPound() {
+	//std::cout << velY << std::endl;
+// Sets Vertical velocity, and Player state to Smash
+	if (state != SMASH) {
+		//Jump_Start = SDL_GetTicks() / Jump_FR;
+		velY = 0;
+		state = SMASH;
+	}
+
+	/*Increases the Y velocity when Jump_Frame modulus 7 = 0,
+	  and the Y velocity is less then or equal to 4*/
+	/*else if (Jump_Frame < (SDL_GetTicks() / Jump_FR - Jump_Start) && velY <= 4) {
+		Jump_Frame = (SDL_GetTicks() / Jump_FR - Jump_Start);
+		if (Jump_Frame < 1)
+			sprite->setFrame(4);
+		else if (Jump_Frame < 2)
+			sprite->setFrame(5);
+		else
+			sprite->setFrame(6);
+		velY += (Gravity*2);
+		//if (velY == 0) {
+			//Gravity = 2;
+		//}
+	}*/
+	else if (velY <= 6) {
+		velY += (Gravity * 1.5);
+	}
+
+
+	//Adjust Player position and boundaries based on the X and Y velocity
+	destRect.y += velY;
+	destRect.x += velX;
+	Hit_Boxes[0].TE = destRect.y;
+	Hit_Boxes[0].BE = destRect.y + destRect.h;
+	Hit_Boxes[0].LE = destRect.x + 6;
+	Hit_Boxes[0].RE = destRect.x + destRect.w - 6;
+	
+}
+
+int Player::getLeft(){
+	return left;
+}
 
 /*set Player State = Run, and Player X velocity = 4*/
 void Player::Run_R() {
@@ -158,10 +205,6 @@ void Player::run() {
 	Hit_Boxes[0].RE = destRect.x + destRect.w -6;
 	//Hit_Boxes[1].BE = Hit_Boxes[0].BE - KickH;
 	//Hit_Boxes[1].TE = Hit_Boxes[1].BE - KickH;
-	Hit_Boxes[1].LE = Hit_Boxes[0].LE - KickL;
-	Hit_Boxes[1].RE = Hit_Boxes[0].LE;
-	Hit_Boxes[2].LE = Hit_Boxes[0].RE;
-	Hit_Boxes[2].RE = Hit_Boxes[1].RE + KickL;
 	//Hit_Boxes[2].BE = Hit_Boxes[0].BE - KickH;
 	//Hit_Boxes[2].TE = Hit_Boxes[2].BE - KickH;
 
@@ -183,12 +226,21 @@ Hit_Box Player::get_Hitbox() {
 }
 
 Hit_Box Player::Kick(){
+	kick = false;
+	Hit_Boxes[2].BE = Hit_Boxes[0].BE - KickH;
+	Hit_Boxes[2].TE = Hit_Boxes[2].BE - KickH;
+	Hit_Boxes[2].RE = Hit_Boxes[0].LE;
+	Hit_Boxes[2].LE = Hit_Boxes[2].RE - KickL;
+	Hit_Boxes[1].LE = Hit_Boxes[0].RE;
+	Hit_Boxes[1].RE = Hit_Boxes[1].LE + KickL;
+	Hit_Boxes[1].BE = Hit_Boxes[0].BE - KickH;
+	Hit_Boxes[1].TE = Hit_Boxes[1].BE - KickH;
 	return Hit_Boxes[left + 1];
 }
 
 void Player::collision_response(char type, int edge, int Obj_index) {
 	bool collision = true;
-	std::cout << type << std::endl;
+	//std::cout << type << std::endl;
 	switch (type) {
             case 'B':
 				velY = 0;
@@ -224,7 +276,7 @@ void Player::collision_response(char type, int edge, int Obj_index) {
 				Hit_Boxes[0].BE = destRect.y + destRect.h;
                 break;
             default:
-                if (Hit_Boxes[0].BE != edge) {
+                if (Hit_Boxes[0].BE != edge && state != SMASH) {
                     state = JUMP;
                     break;
                 }
@@ -233,6 +285,10 @@ void Player::collision_response(char type, int edge, int Obj_index) {
 
 int Player::getState() {
 	return state;
+}
+
+bool Player::getKick(){
+	return kick;
 }
 
 void Player::render(SDL_Renderer* renderer) {

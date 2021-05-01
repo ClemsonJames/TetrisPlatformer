@@ -20,7 +20,7 @@ class Button{
             destRect.w = w;
             destRect.h = h;
             ID = id;
-            sprite = new Sprite(0, 32, 32, name, image);
+            sprite = new Sprite(0, w, h, name, image);
             sprite->setFrame(0);
         }
 

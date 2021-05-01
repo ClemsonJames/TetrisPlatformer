@@ -24,6 +24,7 @@ class Tile: public Game_Entity{
 			numCols = nCols;
 			sprite = new Sprite(1, 16, 16, "./asset/tiles.png", image);
 
+			id = 0;
 
 			int srcx = (tileType % numCols);
 			int srcy = (tileType / numCols);

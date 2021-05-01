@@ -59,6 +59,9 @@ void Block::rotate(bool direct) {
 void Block::move(int x, int y){
 	Px += x;
 	Py += y;
+	dest_rect.w = w;
+	dest_rect.h = h;
+	
 	if (State == 0) {
 		Box.LE = Px - offset;
 		Box.RE = Box.LE + w;
@@ -66,22 +69,28 @@ void Block::move(int x, int y){
 		Box.BE = Py + h;
 	}
 	else if (State == 1) {
+		dest_rect.w = h;
+		dest_rect.h = w;
 		Box.LE = Px;
-		Box.RE = Px + w;
-		Box.BE = Py - offset;
-		Box.TE = Box.BE - h;
+		Box.RE = Px + h;
+		Box.BE = Py + offset;
+		Box.TE = Box.BE - w;
 	}
 	else if (State == 2) {
+		dest_rect.w = w;
+		dest_rect.h = h;
 		Box.RE = Px + offset;
 		Box.LE = Box.RE - w;
 		Box.TE = Py - h;
 		Box.BE = Py;
 	}
 	else if (State == 3) {
-		Box.LE = Px - w;
+		dest_rect.w = h;
+		dest_rect.h = w;
+		Box.LE = Px - h;
 		Box.RE = Px;
 		Box.TE = Py - offset;
-		Box.BE = Box.TE + h;
+		Box.BE = Box.TE + w;
 	}
 	dest_rect.x = Box.LE;
 	dest_rect.y = Box.TE;
@@ -136,4 +145,16 @@ void Block::render(SDL_Renderer* gameRenderer, Sprite* sprite) {
 	dest_rect.x = Box.LE;
 	dest_rect.y = Box.TE;*/
 	sprite->render(gameRenderer, dest_rect, false);
+}
+
+int Block::get_Px(){
+	return Px;
+}
+
+int Block::get_Py(){
+	return Py;
+}
+
+SDL_Rect Block::getRect() {
+	return dest_rect;
 }

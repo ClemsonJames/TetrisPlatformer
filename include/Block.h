@@ -60,4 +60,7 @@ public:
 	void move(int x, int y);
 	bool inside(int x, int y);
 	void render(SDL_Renderer* gameRenderer, Sprite* sprite);
+	int get_Px();
+	int get_Py();
+	SDL_Rect getRect();
 };
